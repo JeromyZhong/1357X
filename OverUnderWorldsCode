@@ -76,7 +76,7 @@ pros::Controller master(pros::E_CONTROLLER_MASTER);
         nullptr,
         nullptr, 
         nullptr, // horizontal tracking wheel 1
-        nullptr, 
+        nullptr,
         &inertial_sensor // inertial sensor
     };
 
