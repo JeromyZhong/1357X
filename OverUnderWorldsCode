@@ -1,0 +1,625 @@
+/*================= Organization =================
+
+===> Table Of Contents <===
+
+==> Motor/3Wire/Chassis Declarations
+
+
+
+==> Autonomous Table Of Contents
+=> Skills Part 1
+Start of the code. Aligns against matchloader, shoots. Pushes 2 balls into own goal. 
+=> Skills Part 2
+Goes through aisle. Brings down catapult (to make sure tracking pod works). Pushes balls in from side. 
+*/
+/*
+Sweep turn on skills
+ chassis.setPose(0, 0, 0);
+    swingChain(-500, -250, 500);
+    backwing_1.set_value(true);
+    swingChain(-500, -500, 280);
+    swingChain(-500, -100, 400);
+    
+    lemlib::Pose poseC = chassis.getPose();
+    chassis.turnTo(800, poseC.y-100, 600, true);
+    
+    swingChain(-600, -600, 600);
+    swingChain(200, 200, 300);
+    swingChain(-600, -600, 600);
+    left_mtrs.brake();
+    right_mtrs.brake();
+*/
+
+    #include "fmt/format.h"
+#include "lemlib/pose.hpp"
+    #include "main.h"
+    #include "pros/adi.hpp"
+    #include "pros/colors.h"
+    #include "pros/misc.h"
+    #include "pros/motors.h"
+    #include "pros/rtos.hpp"
+    #include "pros/screen.hpp"
+    #include "lemlib/api.hpp"
+#include <algorithm>
+    #include <chrono>
+    #include <string>
+    #include <iostream>
+    #include <type_traits>
+    #include <cmath> 
+
+    using namespace std::chrono;
+pros::Controller master(pros::E_CONTROLLER_MASTER);
+    //CHASSIS 
+    pros::Motor right_mtr_1(11, pros::E_MOTOR_GEARSET_06);
+    pros::Motor left_mtr_1(18, pros::E_MOTOR_GEARSET_06, true);
+    pros::Motor right_mtr_2(12, pros::E_MOTOR_GEARSET_06);
+    pros::Motor left_mtr_2(19, pros::E_MOTOR_GEARSET_06, true);
+    pros::Motor right_mtr_3(13, pros::E_MOTOR_GEARSET_06);
+    pros::Motor left_mtr_3(20, pros::E_MOTOR_GEARSET_06, true);
+    
+   // pros::Motor left_half_mtr(6, pros::E_MOTOR_GEARSET_18, true);
+    //pros::Motor right_half_mtr(6, pros::E_MOTOR_GEARSET_18);
+    pros::Distance distance_sensor(16);
+    pros::Motor_Group left_mtrs({left_mtr_1, left_mtr_2, left_mtr_3});
+    pros::Motor_Group right_mtrs({right_mtr_1, right_mtr_2, right_mtr_3});
+    lemlib::Drivetrain drivetrain {
+        &left_mtrs, // left drivetrain motors
+        &right_mtrs, // right drivetrain motors
+        10.4, // track width
+        3.25, // wheel diameter
+        450, // wheel rpm
+        100
+    };
+    pros::Imu inertial_sensor(1);
+    
+    lemlib::OdomSensors sensors {
+        nullptr,
+        nullptr, 
+        nullptr, // horizontal tracking wheel 1
+        nullptr, 
+        &inertial_sensor // inertial sensor
+    };
+
+
+
+    //PID constants
+    // forward/backward PID
+    lemlib::ControllerSettings linearController {
+        8, // proportional gain (kP)
+        0.1, // integral gain (kI)
+        23, // derivative gain (kD)
+        3, // anti windup
+        0.5, // small error range, in inches
+        300, // small error range timeout, in milliseconds
+        2, // large error range, in inches
+        700, // large error range timeout, in milliseconds
+        20 // maximum acceleration (slew)
+
+
+    };
+
+    // turning PID
+    lemlib::ControllerSettings angularController {
+        2, // proportional gain (kP)
+        0.15, // integral gain (kI)
+        13, // derivative gain (kD)
+        10, // anti windup
+        0.5, // small error range, in degrees
+        200, // small error range timeout, in milliseconds
+        3, // large error range, in degrees
+        600, // large error range timeout, in milliseconds
+        0 // maximum acceleration (slew)
+
+    };
+    lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors); //final chassis
+
+
+
+
+    pros::ADIDigitalOut sweepWing(6);
+    
+    pros::ADIDigitalOut hang(4);
+    pros::ADIDigitalOut rfrontwing(7);
+    pros::ADIDigitalOut lfrontwing(3);
+    pros::Motor intake_1(14, pros::E_MOTOR_GEARSET_36, true);
+    pros::Motor intake_2(17, pros::E_MOTOR_GEARSET_36, false);
+    pros::Motor_Group intake({intake_1, intake_2});
+    bool cataState;
+
+void screen() {
+    // loop forever
+    while (true) {
+         // get the current position of the robot
+        pros::lcd::print(0, "x: %f", chassis.getPose().x); // print the x position
+        pros::lcd::print(1, "y: %f", chassis.getPose().y); // print the y position
+        pros::lcd::print(2, "heading: %f", chassis.getPose().theta); // print the heading
+        pros::lcd::print(3, "cataLimitValue: %f", fmt::to_string((distance_sensor.get())));
+        pros::delay(50);
+    }
+}
+void swingChain(float left1, float right1, float time1){
+    right_mtrs.move_velocity(right1);
+    left_mtrs.move_velocity(left1);
+    
+    pros::delay(time1);
+}
+/*
+void moveUntil(float speed, float mm){
+    while (distance_sensor.get() < mm){
+        pros::delay(20);
+    }
+}
+*/
+
+
+void safesixball(){
+   chassis.setPose(16, -60, -90);
+    intake.move_voltage(12000);
+
+    chassis.moveToPoint(10, -60, 300, true, 127, false);
+    pros::delay(250);
+
+    chassis.turnTo(33, -57, 1200, true, 127, false);
+    intake.brake();
+    chassis.moveToPoint(33, -57, 1200, true, 127, false);
+     intake.move_voltage(-12000);
+    chassis.moveToPoint(47, -50, 800, true, 127, false);
+
+
+    sweepWing.set_value(true);
+    left_mtrs.move_voltage(-12000);
+    right_mtrs.move_voltage(12000);
+    pros::delay(100);
+    left_mtrs.brake();
+    right_mtrs.brake();
+    left_mtrs.move_voltage(-12000);
+    right_mtrs.move_voltage(12000);
+    pros::delay(300);
+    left_mtrs.brake();
+    right_mtrs.brake();
+    
+
+    chassis.turnTo(70, -24, 700, false, 127, false);
+    
+    left_mtrs.move_voltage(-12000);
+    right_mtrs.move_voltage(-7000);
+    pros::delay(300);
+    right_mtrs.move_voltage(-12000);
+    pros::delay(700);
+    left_mtrs.brake();
+    right_mtrs.brake();
+    sweepWing.set_value(false);
+}
+void safesixballparttwo(){
+    chassis.setPose(61, -32, 180);
+    chassis.moveToPoint(61, -36, 400, true, 127, false);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(11, -31, 1600, true, 127, false);
+    chassis.turnTo(24, -17, 1000, true, 127, false);
+    intake.brake();
+    chassis.moveToPoint(24, -17, 900, true, 127, false);
+    //chassis.turnTo(50, -17, 800,  true, 127, false);
+    intake.move_voltage(-12000);
+    pros::delay(500);
+    chassis.turnTo(8, -34, 600, false, 127, false);
+    chassis.moveToPoint(8, -34, 900, false, 127, false);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(-7, -9, 1200, true, 127, false);
+    //chassis.moveToPoint(-2, -8, 500, true, 127, false);
+    chassis.turnTo(80, chassis.getPose().y, 1300, true, 127, false);
+    rfrontwing.set_value(true);
+    lfrontwing.set_value(true);
+    intake.move_voltage(-12000);
+    left_mtrs.move_voltage(8000);
+    right_mtrs.move_voltage(8000);
+    
+
+
+}
+void sixball(){
+    chassis.setPose(36, -55, -11);
+     rfrontwing.set_value(true);
+     pros::Task task4{[=] {
+        pros::delay(400);
+        rfrontwing.set_value(false);
+    }
+    };
+    intake.move_voltage(12000);
+    chassis.moveToPoint(11, -4, 1400, true, 127, false);
+    
+    chassis.turnTo(47, 0, 1100, true, 75, false);
+    intake.move_voltage(-12000);
+    //pros::delay(80000);
+    pros::delay(100);
+    rfrontwing.set_value(true);
+    lfrontwing.set_value(true);
+    chassis.moveToPoint(47, 0, 2000, true, 127, true);
+    
+    
+    pros::delay(500);
+    intake.brake();
+    chassis.cancelAllMotions();
+    left_mtrs.move_voltage(8000);
+    right_mtrs.move_voltage(8000);
+    pros::delay(600);
+    
+    left_mtrs.brake();
+    right_mtrs.brake();
+    chassis.setPose(43, -7, 90);
+    rfrontwing.set_value(false);
+    lfrontwing.set_value(false);
+    /*
+    pros::delay(80000);
+    //chassis.moveToPoint(38, -7, 800, false, 127, false);
+    chassis.moveToPoint(34, -27, 1600, false, 127, false);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(12, -22, 2500, true, 127, false);
+    chassis.moveToPoint(20, -5, 1500, false, 127, false);
+    chassis.moveToPose(36, -36, 90, 3500, {}, false);
+    */
+    
+
+    
+}
+void sixballparttwo(){
+    chassis.setPose(43, -7, 90);
+    chassis.moveToPoint(26, -7, 700, false, 127, false);
+    intake.move_voltage(8000);
+    chassis.moveToPoint(16, -23, 1200, true, 127, false);
+   
+    chassis.moveToPoint(24, -15, 700, false, 127, false);
+    intake.brake();
+    chassis.moveToPoint(40, -36,1100, true, 127, false);
+    intake.move_voltage(-12000);
+    chassis.turnTo(80, -36, 600, true, 127, false);
+    
+    chassis.moveToPoint(40, -63, 1200, true, 127, false);
+    chassis.turnTo(17, -65, 600, true, 127, false);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(17, -65, 800, true, 127, false);
+    chassis.turnTo(44, -55, 900, true, 127, false);
+    intake.brake();
+    chassis.moveToPoint(44, -55, 800, true, 127, false);
+    sweepWing.set_value(true);
+    chassis.moveToPoint(54, -49, 300, true, 127, false);
+    intake.move_voltage(-12000);
+    pros::delay(400);
+    
+    sweepWing.set_value(true);
+    left_mtrs.move_voltage(-12000);
+    right_mtrs.move_voltage(12000);
+    pros::delay(250);
+    left_mtrs.brake();
+    right_mtrs.brake();
+    pros::delay(50);
+    sweepWing.set_value(false);
+    left_mtrs.move_voltage(-12000);
+    right_mtrs.move_voltage(12000);
+    pros::delay(400);
+    left_mtrs.brake();
+    right_mtrs.brake();
+    //sweepWing.set_value(false);
+    
+    chassis.turnTo(85, -12, 700, false, 127, false);
+    //sweepWing.set_value(true);
+    left_mtrs.move_voltage(-12000);
+    right_mtrs.move_voltage(-9000);
+    pros::delay(300);
+    right_mtrs.move_voltage(-12000);
+    
+
+
+}
+void counterwp(){
+    chassis.setPose(-37, -55, 13); //setting pose (tool setup)
+    
+    lfrontwing.set_value(true);
+     pros::Task task2{[=] {
+        pros::delay(400);
+        lfrontwing.set_value(false);
+    }
+    };
+    
+
+    intake.move_voltage(12000);
+    chassis.moveToPoint(-27, -9, 1200, true, 127, false); //Drive to middle ball, intakes
+    
+
+    chassis.moveToPoint(-37, -55, 1400, false, 127, false);//Heads back
+    
+    intake.brake();
+    chassis.turnTo(-60, -36, 1000, false, 127, false);//Turns to about a 45 degree angle, parallelish to match loader
+    chassis.moveToPoint(-60, -36, 1300, false, 127, false);//Moves there
+    //pros::delay(70000);
+    chassis.turnTo(-66, 1000, 1000, false, 127, false);//Turns back towards goal
+    left_mtrs.move_voltage(-12000);
+    right_mtrs.move_voltage(-12000);
+    pros::delay(600);
+    
+    left_mtrs.move_voltage(-3000);
+    right_mtrs.move_voltage(-3000);
+    pros::delay(400);
+    left_mtrs.brake();
+    right_mtrs.brake();
+    chassis.setPose(-63, -33, 180); //sets pose (side of goal)
+    chassis.moveToPoint(-53, -53, 2400, true, 127, false); //Moves parallel to matchloader, next to ball
+    sweepWing.set_value(true); //deploys sweepwing
+    pros::delay(300);
+    //chassis.turnTo(-48, 0, 900, true, 354, false); //Sweeps out ball by turning towards origin
+    left_mtrs.move_voltage(-12000);
+    right_mtrs.move_voltage(12000);
+    pros::delay(300);
+    left_mtrs.brake();
+    right_mtrs.brake();
+    sweepWing.set_value(false);//Undeploys sweep wing
+    chassis.turnTo(5000, chassis.getPose().y-2000, 1700, true, 127, false);//Turn towards bar
+    left_mtrs.move_voltage(5000);
+    right_mtrs.move_voltage(5000);
+    pros::delay(700);
+    chassis.turnTo(5000, chassis.getPose().y, 1700, true, 127, false);//Turn towards bar
+    intake.move_voltage(-12000);
+    while (distance_sensor.get() < 1400){ //Go to matchload bar code
+        left_mtrs.move_voltage((1400-distance_sensor.get())*24);
+        right_mtrs.move_voltage((1400-distance_sensor.get())*24);
+        pros::delay(20);
+    }
+    left_mtrs.brake();
+    right_mtrs.brake();
+
+
+    //chassis.turnTo(-48, -38)
+}
+void rushwp(){
+    chassis.setPose(-35, -55, 13); //Setting pose (tool setup)
+    
+    lfrontwing.set_value(true);
+     pros::Task task3{[=] {
+        pros::delay(400);
+        lfrontwing.set_value(false);
+    }
+    };
+    intake.move_voltage(12000);
+    chassis.moveToPoint(-27, -8, 1600, true, 127, false); //Drives towards middle ball, intakes
+    chassis.turnTo(50, -6, 1300, true, 127, false); //Turns towards barrier
+    intake.move_voltage(-12000);
+    rfrontwing.set_value(true);
+    lfrontwing.set_value(true);
+    left_mtrs.move_voltage(4000);
+    right_mtrs.move_voltage(4000);
+    pros::delay(1400); //Pushes against barrier, outtakes
+    left_mtrs.brake();
+    right_mtrs.brake(); 
+    chassis.setPose(-10, -8, 90); //Sets pose
+    rfrontwing.set_value(false);
+    lfrontwing.set_value(false);
+    chassis.moveToPoint(-43, -48, 4000, false, 127, false);//Moves back to aisle area
+    chassis.turnTo(-67, -33, 800, false, 127, false);//Turns at a 45 degree angle parallel to matchloader
+    chassis.moveToPoint(-67, -33, 900, false, 127, false); //Moves there
+    chassis.turnTo(-67, 1000, 700, false, 127, false);//Turns so that back is facing towards goal
+    left_mtrs.move_voltage(-12000);
+    right_mtrs.move_voltage(-12000);
+    pros::delay(600);   //Pushes into goal
+    left_mtrs.move_voltage(-3000);
+    right_mtrs.move_voltage(-3000);
+    pros::delay(300);
+    left_mtrs.brake();
+    right_mtrs.brake();
+     chassis.setPose(-63, -33, 180); //sets pose (side of goal)
+    chassis.moveToPoint(-53, -53, 2400, true, 127, false); //Moves parallel to matchloader, next to ball
+    sweepWing.set_value(true); //deploys sweepwing
+    pros::delay(300);
+    //chassis.turnTo(-48, 0, 900, true, 354, false); //Sweeps out ball by turning towards origin
+    left_mtrs.move_voltage(-12000);
+    right_mtrs.move_voltage(12000);
+    pros::delay(300);
+    left_mtrs.brake();
+    right_mtrs.brake();
+    sweepWing.set_value(false);//Undeploys sweep wing
+    chassis.turnTo(5000, chassis.getPose().y-2000, 1700, true, 127, false);//Turn towards bar
+    left_mtrs.move_voltage(5000);
+    right_mtrs.move_voltage(5000);
+    pros::delay(700);
+    chassis.turnTo(5000, chassis.getPose().y, 1700, true, 127, false);//Turn towards bar
+    intake.move_voltage(-12000);
+    while (distance_sensor.get() < 1400){ //Go to matchload bar code
+        left_mtrs.move_voltage((1400-distance_sensor.get())*24);
+        right_mtrs.move_voltage((1400-distance_sensor.get())*24);
+        pros::delay(20);
+    }
+    left_mtrs.brake();
+    right_mtrs.brake();
+
+}
+void initialize() {  
+	pros::lcd::initialize();
+    pros::lcd::set_background_color(58, 185, 187);
+    pros::lcd::set_text_color(255, 126, 56);
+	chassis.calibrate();
+    pros::Task screenTask(screen);
+}
+
+
+void disabled() {
+
+}
+
+void competition_initialize() {
+	
+}
+
+void autonomous() {
+    left_mtrs.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+    right_mtrs.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+    
+    pros::delay(50);
+    sixball();
+    sixballparttwo();
+ 
+   
+}
+
+void opcontrol() {
+	
+	
+    bool frontWingsReset = true;
+    bool frontWingsValue = false;
+    bool backWingsReset = true;
+    bool backWingsValue = false;
+    bool hangReset = true;
+    bool hangValue = false;
+
+    char drivingMode = 'T';
+    int yButtonCounter = 0;
+    
+
+    left_mtrs.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+    right_mtrs.set_brake_modes(pros::E_MOTOR_BRAKE_COAST);
+  
+	while (true) {
+
+
+
+        //======> Driving <=======
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+            yButtonCounter = yButtonCounter + 1;
+        }
+        else{
+            yButtonCounter = 0;
+        }
+        if (yButtonCounter > 20){
+            if (drivingMode == 'T'){
+                drivingMode = 'A';
+            }
+            else if (drivingMode == 'A'){
+                drivingMode = 'T';
+            }
+        }
+
+
+
+        if (drivingMode == 'T'){
+            int leftmotorspwr = master.get_analog(ANALOG_LEFT_Y);
+            int rightmotorspwr = master.get_analog(ANALOG_RIGHT_Y);
+            
+            
+            if (leftmotorspwr > 10 or leftmotorspwr < -10){
+                left_mtrs.move(leftmotorspwr);
+            }
+            else{
+                left_mtrs.move(0);
+            }
+            if (rightmotorspwr > 10 or rightmotorspwr < -10){
+                right_mtrs.move(rightmotorspwr);
+            }
+            else{
+                right_mtrs.move(0);
+            }
+        }
+
+        else if (drivingMode == 'A'){
+            float v;
+            if (master.get_analog(ANALOG_RIGHT_X) > 0){
+                v = -pow(10000-pow(master.get_analog(ANALOG_RIGHT_X)*100.0/127.5, 2), 0.5)+100;
+            }
+            else {
+                v = pow(10000-pow(master.get_analog(ANALOG_RIGHT_X)*100.0/127.5, 2), 0.5)-100;
+            }
+            
+            
+            int leftmotorspwr = master.get_analog(ANALOG_LEFT_Y) + v;
+            int rightmotorspwr = master.get_analog(ANALOG_LEFT_Y) - v;
+            if (leftmotorspwr == 0){
+                left_mtrs.brake();
+            }
+            else{
+                left_mtrs.move(leftmotorspwr);
+            }
+            if (rightmotorspwr == 0){
+                right_mtrs.brake();
+            }
+            else{
+                right_mtrs.move(rightmotorspwr);
+            }
+        }
+
+        //======> Not Shifting <======
+        if ( not master.get_digital(DIGITAL_R2)) {
+            
+            if (master.get_digital(DIGITAL_L1)) {
+                intake.move_voltage(12000);
+            }
+            else if (master.get_digital(DIGITAL_L2)) {
+                intake.move_voltage(-12000);
+            }
+            else {
+                intake.move_voltage(0);
+            }
+            
+        }
+
+        //======> Shifting <======
+        else{
+            
+            if ((master.get_digital(DIGITAL_L1)) and frontWingsReset){
+                if (frontWingsValue){
+                    rfrontwing.set_value(false);
+                    lfrontwing.set_value(false);
+                    frontWingsValue = false;
+                }
+                else if (not frontWingsValue and frontWingsReset){
+                    rfrontwing.set_value(true);
+                    lfrontwing.set_value(true);
+                    frontWingsValue = true;
+                }
+
+                frontWingsReset = false;
+            }
+            
+
+            if ((master.get_digital(DIGITAL_L2)) and backWingsReset){
+                if (backWingsValue){
+                   sweepWing.set_value(false);
+                    backWingsValue = false;
+                }
+                else if (not backWingsValue and backWingsReset){
+                    sweepWing.set_value(true);
+                    backWingsValue = true;
+                }
+
+                backWingsReset = false;
+            }
+
+            if ((master.get_digital(DIGITAL_UP)) and hangReset){
+                if (hangValue){
+                    hang.set_value(false);
+                    hangValue = false;
+                }
+                else if (not hangValue and hangReset){
+                    hang.set_value(true);
+                    hangValue = true;
+                }
+
+                hangReset = false;
+            }
+            
+        }
+        
+
+
+        if (not master.get_digital(DIGITAL_L1)){
+                
+                frontWingsReset = true;
+        }
+        if (not master.get_digital(DIGITAL_L2)){
+                
+                backWingsReset = true;
+        }
+        if (not master.get_digital(DIGITAL_UP)){
+                
+                hangReset = true;
+        }
+		pros::delay(20);
+	}
+    
+
+}
