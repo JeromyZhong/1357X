@@ -117,7 +117,9 @@ void RedSoloWP() {
     chassis.moveToPoint(0, 42, 2000, {.forwards = true}, false);
 }
 
-
+void RedLeft() {
+    
+}
 
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
