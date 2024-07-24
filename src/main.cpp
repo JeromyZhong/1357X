@@ -101,7 +101,7 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 
-void RedSoloWP() {
+void RedSoloWPNonRush() {
   // set position to x:0, y:0, heading:0
     chassis.setPose(0, 0, 0);
     chassis.moveToPoint(-10, -2, 2500, {.forwards = false}, false);
@@ -115,6 +115,47 @@ void RedSoloWP() {
     right_motors.brake();
     chassis.moveToPoint(18, 50, 2000, {.forwards = false}, false);
     chassis.moveToPoint(0, 42, 2000, {.forwards = true}, false);
+}
+
+void RedRightRush() {
+    chassis.setPose(0, 0, 0);
+    chassis.moveToPoint(-3, -27, 2000, {.forwards = false}, false);
+    chassis.moveToPoint(-10, -36, 2000, {.forwards = false}, false);
+    left_motors.move_voltage(-3000);
+    right_motors.move_voltage(-3500);
+    pros::delay(400);
+    left_motors.brake();
+    right_motors.brake();
+    left_motors.move_voltage(3000);
+    right_motors.move_voltage(3000);
+    pros::delay(1000);
+    left_motors.brake();
+    right_motors.brake();
+    chassis.moveToPoint(5, -32, 2000, {.forwards = false}, false);
+    left_motors.move_voltage(-4000);
+    right_motors.move_voltage(-3000);
+    pros::delay(500);
+    left_motors.brake();
+    right_motors.brake();
+    chassis.moveToPoint(-10, -34, 2000, {.forwards = true}, false);
+    left_motors.move_voltage(3000);
+    right_motors.move_voltage(3000);
+    pros::delay(500);
+    left_motors.brake();
+    right_motors.brake();
+    chassis.moveToPoint(16, -14, 2000, {.forwards = true}, false);
+    left_motors.move_voltage(3000);
+    right_motors.move_voltage(3000);
+    pros::delay(500);
+    left_motors.brake();
+    right_motors.brake();
+    chassis.moveToPoint(20, 8, 2000, {.forwards = false}, false);
+    left_motors.move_voltage(12000);
+    right_motors.move_voltage(12000);
+    pros::delay(750);
+    left_motors.brake();
+    right_motors.brake();
+
 }
 
 void RedLeft() {
@@ -168,7 +209,7 @@ void competition_initialize() {}
  */
 void autonomous() {
     // Auton Function
-    RedSoloWP();
+    RedRightRush();
 }
 
 /**
