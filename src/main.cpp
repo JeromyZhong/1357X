@@ -17,21 +17,21 @@
 	#include <cmath> 
 
 // Drivetrain Motors
-pros::MotorGroup left_motors({-17, -18, -19}, pros::MotorGearset::green); // left motors on ports 1, 2, 3; all forwards
+pros::MotorGroup left_motors({-18, -19, -20}, pros::MotorGearset::green); // left motors on ports 1, 2, 3; all forwards
 pros::MotorGroup right_motors({11, 12, 13}, pros::MotorGearset::green); // right motors on ports 4, 5, 6; all forwards
 
 // Drivetrain Settings
 lemlib::Drivetrain drivetrain(
 	&left_motors, // left motor group
 	&right_motors, // right motor group
-    11, // 11 inch track width
-    lemlib::Omniwheel::OLD_275, // using old 2.75" omnis
+    10.5, // 11 inch track width
+    lemlib::Omniwheel::OLD_325, // using old 3.25" omnis
     450, // drivetrain rpm is 450
     2 // horizontal drift is 2 (for now)
 );
 
 //Inertial Sensor
-pros::Imu inertial_sensor(15);
+pros::Imu inertial_sensor(1);
 
 //Final Configuration of sensors
 lemlib::OdomSensors sensors(
@@ -45,12 +45,12 @@ lemlib::OdomSensors sensors(
 // PID Constants
 // Lateral PID Controller
 lemlib::ControllerSettings lateral_controller(
-	10, // proportional gain (kP)
+    28, // proportional gain (kP)
     0, // integral gain (kI)
-    3, // derivative gain (kD)
+    50, // derivative gain (kD)
     3, // anti windup
     1, // small error range, in inches
-    100, // small error range timeout, in milliseconds
+    250, // small error range timeout, in milliseconds
     3, // large error range, in inches
     500, // large error range timeout, in milliseconds
     20 // maximum acceleration (slew)
@@ -58,14 +58,14 @@ lemlib::ControllerSettings lateral_controller(
 
 // Angular PID Controller
 lemlib::ControllerSettings angular_controller(
-    2.05, // proportional gain (kP)
-    0, // integral gain (kI)
-    10, // derivative gain (kD)
-    3, // anti windup
-    1, // small error range, in inches
-    100, // small error range timeout, in milliseconds
-    3, // large error range, in inches
-    500, // large error range timeout, in milliseconds
+    2.5, // proportional gain (kP)
+    0.15, // integral gain (kI)
+    18, // derivative gain (kD)
+    10, // anti windup
+    0.5, // small error range, in degrees
+    200, // small error range timeout, in milliseconds
+    3, // large error range, in degrees
+    600, // large error range timeout, in milliseconds
     0 // maximum acceleration (slew)
 );
 
@@ -100,6 +100,22 @@ void on_center_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+
+void RedSoloWP() {
+  // set position to x:0, y:0, heading:0
+    chassis.setPose(0, 0, 0);
+    chassis.moveToPoint(-10, -2, 2500, {.forwards = false}, false);
+    chassis.moveToPoint(5, 10, 2500, {.forwards = true}, false);
+    chassis.moveToPoint(5, 40, 2500, {.forwards = false}, false);
+    chassis.moveToPoint(-6, 20, 2500, {.forwards = true}, false);
+    left_motors.move_voltage(3000);
+    right_motors.move_voltage(3000);
+    pros::delay(750);
+    left_motors.brake();
+    right_motors.brake();
+    chassis.moveToPoint(18, 50, 2000, {.forwards = false}, false);
+    chassis.moveToPoint(0, 42, 2000, {.forwards = true}, false);
+}
 
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
@@ -147,10 +163,8 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	// set position to x:0, y:0, heading:0
-    chassis.setPose(0, 0, 0);
-    // turn to face heading 90 with a very long timeout
-    chassis.turnToHeading(90, 100000);
+    // Auton Function
+    RedSoloWP();
 }
 
 /**

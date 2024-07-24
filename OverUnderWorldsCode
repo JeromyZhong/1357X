@@ -109,8 +109,8 @@ pros::Controller master(pros::E_CONTROLLER_MASTER);
         3, // large error range, in degrees
         600, // large error range timeout, in milliseconds
         0 // maximum acceleration (slew)
-
     };
+    
     lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors); //final chassis
 
 
