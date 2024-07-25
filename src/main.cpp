@@ -159,7 +159,26 @@ void RedRightRush() {
 }
 
 void RedLeft() {
-    
+    chassis.setPose(0, 0, 0);
+    chassis.turnToPoint(0, -12, 2000, {.forwards = false}, false);
+    chassis.moveToPoint(0, -12, 2000, {.forwards = false}, false);
+    left_motors.move_voltage(-3000);
+    right_motors.move_voltage(-3000);
+    pros::delay(1000);
+    left_motors.brake();
+    right_motors.brake();
+    chassis.turnToPoint(16, -22, 2000, {.forwards = true}, false);
+    chassis.moveToPoint(16, -22, 2000, {.forwards = true}, false);
+    left_motors.move_voltage(3000);
+    right_motors.move_voltage(3000);
+    pros::delay(750);
+    left_motors.brake();
+    right_motors.brake();
+    left_motors.move_voltage(-3000);
+    chassis.turnToPoint(4, -22, 2000, {.forwards = false}, false);
+    chassis.moveToPoint(4, -22, 2000, {.forwards = false}, false);
+    chassis.turnToHeading(135, 2000);
+
 }
 
 void initialize() {
@@ -209,7 +228,7 @@ void competition_initialize() {}
  */
 void autonomous() {
     // Auton Function
-    RedRightRush();
+    RedLeft();
 }
 
 /**
