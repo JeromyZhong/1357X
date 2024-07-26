@@ -181,6 +181,66 @@ void RedLeft() {
 
 }
 
+void BlueLeftRush() {
+    chassis.setPose(0, 0, 0);
+    chassis.moveToPoint(3, -27, 2000, {.forwards = false}, false);
+    chassis.moveToPoint(10, -36, 2000, {.forwards = false}, false);
+    left_motors.move_voltage(-3000);
+    right_motors.move_voltage(-3500);
+    pros::delay(400);
+    left_motors.brake();
+    right_motors.brake();
+    left_motors.move_voltage(3000);
+    right_motors.move_voltage(3000);
+    pros::delay(1000);
+    left_motors.brake();
+    right_motors.brake();
+    chassis.moveToPoint(-5, -32, 2000, {.forwards = false}, false);
+    left_motors.move_voltage(-4000);
+    right_motors.move_voltage(-3000);
+    pros::delay(500);
+    left_motors.brake();
+    right_motors.brake();
+    chassis.moveToPoint(10, -34, 2000, {.forwards = true}, false);
+    left_motors.move_voltage(3000);
+    right_motors.move_voltage(3000);
+    pros::delay(500);
+    left_motors.brake();
+    right_motors.brake();
+    chassis.moveToPoint(-16, -14, 2000, {.forwards = true}, false);
+    left_motors.move_voltage(3000);
+    right_motors.move_voltage(3000);
+    pros::delay(500);
+    left_motors.brake();
+    right_motors.brake();
+    chassis.moveToPoint(-20, 8, 2000, {.forwards = false}, false);
+    left_motors.move_voltage(12000);
+    right_motors.move_voltage(12000);
+    pros::delay(750);
+    left_motors.brake();
+    right_motors.brake();
+}
+
+void Skills() {
+    chassis.setPose(0, 0, 0);
+    chassis.moveToPoint(0, -5, 3000, {.forwards = false, .maxSpeed = 10}, false);
+    pros::delay(750);
+    chassis.moveToPoint(0, 8, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(-24, 8, 3000, {.forwards = false, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-24, 8, 3000, {.forwards = false, .maxSpeed = 30}, false);
+    chassis.turnToPoint(-24, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-24, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(-58, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-58, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(-58, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-58, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(-64, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-64, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(-64, 4, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-64, 4, 3000, {.forwards = true, .maxSpeed = 60}, false);
+
+}
+
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
@@ -228,7 +288,7 @@ void competition_initialize() {}
  */
 void autonomous() {
     // Auton Function
-    RedLeft();
+    Skills();
 }
 
 /**

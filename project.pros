@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "RedLeft",
+    "project_name": "Skils",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -298,8 +298,8 @@
       }
     },
     "upload_options": {
-      "description": "Red Left Side Solo WP",
-      "slot": 4
+      "description": "Skills",
+      "slot": 5
     },
     "use_early_access": false
   }
