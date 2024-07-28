@@ -332,10 +332,6 @@ void counterwp(){
     chassis.moveToPoint(-60, -36, 1300, false, 127, false);//Moves there
     //pros::delay(70000);
     chassis.turnTo(-66, 1000, 1000, false, 127, false);//Turns back towards goal
-    left_mtrs.move_voltage(-12000);
-    right_mtrs.move_voltage(-12000);
-    pros::delay(600);
-    
     left_mtrs.move_voltage(-3000);
     right_mtrs.move_voltage(-3000);
     pros::delay(400);

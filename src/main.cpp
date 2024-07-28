@@ -17,21 +17,21 @@
 	#include <cmath> 
 
 // Drivetrain Motors
-pros::MotorGroup left_motors({-18, -19, -20}, pros::MotorGearset::green); // left motors on ports 1, 2, 3; all forwards
-pros::MotorGroup right_motors({11, 12, 13}, pros::MotorGearset::green); // right motors on ports 4, 5, 6; all forwards
+pros::MotorGroup left_motors({-18, -17, -16}, pros::MotorGearset::green); // left motors on ports 1, 2, 3; all forwards
+pros::MotorGroup right_motors({13, 14, 15}, pros::MotorGearset::green); // right motors on ports 4, 5, 6; all forwards
 
 // Drivetrain Settings
 lemlib::Drivetrain drivetrain(
 	&left_motors, // left motor group
 	&right_motors, // right motor group
-    10.5, // 11 inch track width
+    11.5, // 11 inch track width
     lemlib::Omniwheel::OLD_325, // using old 3.25" omnis
     450, // drivetrain rpm is 450
     2 // horizontal drift is 2 (for now)
 );
 
 //Inertial Sensor
-pros::Imu inertial_sensor(1);
+pros::Imu inertial_sensor(19);
 
 //Final Configuration of sensors
 lemlib::OdomSensors sensors(
@@ -45,27 +45,27 @@ lemlib::OdomSensors sensors(
 // PID Constants
 // Lateral PID Controller
 lemlib::ControllerSettings lateral_controller(
-    28, // proportional gain (kP)
+    10, // proportional gain (kP)
     0, // integral gain (kI)
-    50, // derivative gain (kD)
-    3, // anti windup
-    1, // small error range, in inches
-    250, // small error range timeout, in milliseconds
-    3, // large error range, in inches
-    500, // large error range timeout, in milliseconds
-    20 // maximum acceleration (slew)
+    70, // derivative gain (kD)
+    0, // anti windup
+    0, // small error range, in inches
+    0, // small error range timeout, in milliseconds
+    0, // large error range, in inches
+    0, // large error range timeout, in milliseconds
+    0 // maximum acceleration (slew)
 );
 
 // Angular PID Controller
 lemlib::ControllerSettings angular_controller(
-    2.5, // proportional gain (kP)
-    0.15, // integral gain (kI)
-    18, // derivative gain (kD)
-    10, // anti windup
+    1.75, // proportional gain (kP)
+    0, // integral gain (kI)
+    10, // derivative gain (kD)
+    3, // anti windup
     0.5, // small error range, in degrees
-    200, // small error range timeout, in milliseconds
+    250, // small error range timeout, in milliseconds
     3, // large error range, in degrees
-    600, // large error range timeout, in milliseconds
+    500, // large error range timeout, in milliseconds
     0 // maximum acceleration (slew)
 );
 
@@ -76,6 +76,9 @@ lemlib::Chassis chassis(
     angular_controller, // angular PID settings
 	sensors // odometry sensors
 );
+
+pros::Motor intake(12);
+pros::adi::DigitalOut backClaw(8);
 
 /**
  * A callback function for LLEMU's center button.
@@ -288,7 +291,9 @@ void competition_initialize() {}
  */
 void autonomous() {
     // Auton Function
-    Skills();
+    chassis.setPose(0, 0, 0);
+    // turn to face heading 90 with a very long timeout
+    chassis.moveToPoint(0, 24, 100000);
 }
 
 /**
@@ -304,9 +309,9 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 void opcontrol() {
+    pros::Controller controller(pros::E_CONTROLLER_MASTER);
     // loop forever
     while (true) {
         // get left y and right y positions
@@ -316,7 +321,26 @@ void opcontrol() {
         // move the robot
         chassis.tank(leftY, rightY);
 
-        // delay to save resources
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            intake.move_voltage(12000);
+        }
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+            intake.move_voltage(-12000);
+        }
+        else {
+                intake.move_voltage(0);
+        }
+
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            backClaw.set_value(true);
+        }
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+            backClaw.set_value(false);
+        }
+        
+
+         // delay to save resources
         pros::delay(25);
+
     }
 }
