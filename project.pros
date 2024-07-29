@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "PIDTuning",
+    "project_name": "RedRightRush",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -298,8 +298,8 @@
       }
     },
     "upload_options": {
-      "description": "PID Tuning",
-      "slot": 1
+      "description": "Red Right Side Rush Solo WP",
+      "slot": 2
     },
     "use_early_access": false
   }

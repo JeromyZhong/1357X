@@ -122,20 +122,38 @@ void RedSoloWPNonRush() {
 
 void RedRightRush() {
     chassis.setPose(0, 0, 0);
-    chassis.moveToPoint(-3, -27, 2000, {.forwards = false}, false);
-    chassis.moveToPoint(-10, -36, 2000, {.forwards = false}, false);
-    left_motors.move_voltage(-3000);
-    right_motors.move_voltage(-3500);
-    pros::delay(400);
-    left_motors.brake();
-    right_motors.brake();
+    backClaw.set_value(true);
+    chassis.moveToPoint(-4, -30, 2500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-8, -42, 2500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-13, -46, 2500, {.forwards = false, .maxSpeed = 20}, false);
+    backClaw.set_value(false);
+    pros::delay(200);
+    chassis.moveToPoint(-8, -42, 2500, {.forwards = true, .maxSpeed = 127}, false);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(-4, -30, 2500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-10, -6, 2500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-20, 20, 1500, {.forwards = false, .maxSpeed = 127}, false);
+    backClaw.set_value(true);
     left_motors.move_voltage(3000);
     right_motors.move_voltage(3000);
-    pros::delay(1000);
+    pros::delay(500);
     left_motors.brake();
     right_motors.brake();
-    chassis.moveToPoint(5, -32, 2000, {.forwards = false}, false);
-    left_motors.move_voltage(-4000);
+    chassis.moveToPoint(-4, -30, 2500, {.forwards = false, .maxSpeed = 90}, false);
+    chassis.turnToPoint(8, -30, 2500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(8, -30, 2500, {.forwards = false, .maxSpeed = 30}, false);
+    backClaw.set_value(false);
+    pros::delay(250);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(-20, -26, 2500, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(24, -4, 2500, {.forwards = true, .maxSpeed = 127}, false);
+    pros::Task task1{[=] {
+            pros::delay(250);
+            backClaw.set_value(true);
+        }
+    };
+
+    /*left_motors.move_voltage(-4000);
     right_motors.move_voltage(-3000);
     pros::delay(500);
     left_motors.brake();
@@ -157,7 +175,7 @@ void RedRightRush() {
     right_motors.move_voltage(12000);
     pros::delay(750);
     left_motors.brake();
-    right_motors.brake();
+    right_motors.brake();*/
 
 }
 
@@ -290,10 +308,12 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+    //Set Motors to Brake
+    left_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    right_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    pros::delay(50);
     // Auton Function
-    chassis.setPose(0, 0, 0);
-    // turn to face heading 90 with a very long timeout
-    chassis.moveToPoint(0, 24, 100000);
+    RedRightRush();
 }
 
 /**
@@ -312,6 +332,8 @@ void autonomous() {
 
 void opcontrol() {
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
+    bool backClawOpened = true;
+    bool backClawClosed = false;
     // loop forever
     while (true) {
         // get left y and right y positions
@@ -331,13 +353,28 @@ void opcontrol() {
                 intake.move_voltage(0);
         }
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2) and backClawOpened) {
+            if (backClawClosed) {
+                backClaw.set_value(false);
+                backClawClosed = false;
+            }
+            else if (not backClawClosed and backClawOpened){
+                backClaw.set_value(true);
+                backClawClosed = true;
+            }
+            backClawOpened = false;
+        }
+
+        if (not controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            backClawOpened = true;
+        }
+
+        /*if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             backClaw.set_value(true);
         }
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
             backClaw.set_value(false);
-        }
-        
+        }*/
 
          // delay to save resources
         pros::delay(25);
