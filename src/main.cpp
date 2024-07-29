@@ -127,31 +127,22 @@ void RedRightRush() {
     chassis.moveToPoint(-8, -42, 2500, {.forwards = false, .maxSpeed = 127}, false);
     chassis.moveToPoint(-13, -46, 2500, {.forwards = false, .maxSpeed = 20}, false);
     backClaw.set_value(false);
-    pros::delay(200);
-    chassis.moveToPoint(-8, -42, 2500, {.forwards = true, .maxSpeed = 127}, false);
+    pros::delay(250);
     intake.move_voltage(12000);
-    chassis.moveToPoint(-4, -30, 2500, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(-10, -6, 2500, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.turnToPoint(-20, 20, 1500, {.forwards = false, .maxSpeed = 127}, false);
-    backClaw.set_value(true);
-    left_motors.move_voltage(3000);
-    right_motors.move_voltage(3000);
     pros::delay(500);
-    left_motors.brake();
-    right_motors.brake();
-    chassis.moveToPoint(-4, -30, 2500, {.forwards = false, .maxSpeed = 90}, false);
-    chassis.turnToPoint(8, -30, 2500, {.forwards = false, .maxSpeed = 127}, false);
-    chassis.moveToPoint(8, -30, 2500, {.forwards = false, .maxSpeed = 30}, false);
+    backClaw.set_value(true);
+    intake.brake();
+    chassis.moveToPoint(-4, -32, 2500, {.forwards = true, .maxSpeed = 90}, false);
+    chassis.turnToPoint(14, -32, 2500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(14, -32, 2500, {.forwards = false, .maxSpeed = 40}, false);
     backClaw.set_value(false);
     pros::delay(250);
     intake.move_voltage(12000);
-    chassis.moveToPoint(-20, -26, 2500, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(24, -4, 2500, {.forwards = true, .maxSpeed = 127}, false);
-    pros::Task task1{[=] {
-            pros::delay(250);
-            backClaw.set_value(true);
-        }
-    };
+    chassis.moveToPoint(-28, -32, 2500, {.forwards = true, .maxSpeed = 40}, false);
+    intake.brake();
+    chassis.turnToPoint(16, 6, 2500, {.forwards = true, .maxSpeed = 127}, false);
+    backClaw.set_value(true);
+    chassis.moveToPoint(16, 6, 2500, {.forwards = true, .maxSpeed = 127}, false);
 
     /*left_motors.move_voltage(-4000);
     right_motors.move_voltage(-3000);
