@@ -253,6 +253,13 @@ void BlueLeftRush() {
     chassis.moveToPoint(18, -30, 2000, {.forwards = true, .maxSpeed = 60}, false);
     // move to touch ladder
     chassis.moveToPoint(-20, -42, 2000, {.forwards = false, .maxSpeed = 60}, false);
+    pros::Task task2{[=] {
+        // stop intake
+        pros::delay(1500);
+        intake.brake();
+        }
+    };
+
 }
 
 void BlueRight() {
@@ -271,45 +278,93 @@ void BlueRight() {
     // run intake
     intake.move_voltage(12000);
     // move to and intake blue rings close to middle line
-    chassis.turnToPoint(-8, -40, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(-8, -40, 2000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-20, -40, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(-8, -42, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-8, -42, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-24, -42, 2000, {.forwards = true, .maxSpeed = 60}, false);
     chassis.moveToPoint(2, -42, 2000, {.forwards = false, .maxSpeed = 127}, false);
     chassis.moveToPoint(-12, -22, 2000, {.forwards = true, .maxSpeed = 60}, false);
-    // move to stack of rings near alliance stake
-    chassis.turnToPoint(26, -8, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(26, -8, 2000, {.forwards = true, .maxSpeed = 90}, false); 
+    // move to ladder
+    chassis.turnToPoint(24, -38, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(24, -38, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    
+    /*// move to stack of rings near alliance stake
+    chassis.turnToPoint(30, -4, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(30, -4, 2000, {.forwards = true, .maxSpeed = 90}, false); 
     // intake red ring   
     pros::delay(250);
     intake.brake();
     // outtake red ring in different direction
-    chassis.moveToPoint(26, 4, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(28, -2, 2000, {.forwards = true, .maxSpeed = 127}, false);
     intake.move_voltage(-12000);
-    pros::delay(250);
-    chassis.moveToPoint(26, -10, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    pros::delay(500);
+    chassis.moveToPoint(24, -16, 2000, {.forwards = false, .maxSpeed = 127}, false);
     // move back and intake red ring
     intake.move_voltage(12000);
-    chassis.moveToPoint(48, 6, 2000, {.forwards = true, .maxSpeed = 90}, false);
+    chassis.turnToPoint(44, 0, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(44, 0, 2000, {.forwards = true, .maxSpeed = 127}, false);*/
 }
 
 void Skills() {
     // set position to x:0, y:0, heading:0
     chassis.setPose(0, 0, 0);
-    chassis.moveToPoint(0, -5, 3000, {.forwards = false, .maxSpeed = 10}, false);
-    pros::delay(750);
-    chassis.moveToPoint(0, 8, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.turnToPoint(-24, 8, 3000, {.forwards = false, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-24, 8, 3000, {.forwards = false, .maxSpeed = 30}, false);
-    chassis.turnToPoint(-24, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-24, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.turnToPoint(-58, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-58, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.turnToPoint(-58, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-58, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.turnToPoint(-64, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-64, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.turnToPoint(-64, 4, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-64, 4, 3000, {.forwards = true, .maxSpeed = 60}, false);
+    // move back to alliance stake
+    chassis.moveToPoint(0, -4, 2000, {.forwards = false, .maxSpeed = 30}, false);
+    // run intake to score preload on alliance stake
+    intake.move_voltage(12000);
+    pros::delay(500);
+    intake.move_voltage(-12000);
+    pros::delay(250);
+    intake.brake();
+    // move to mobile goal on left
+    chassis.moveToPoint(0, 14, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-22, 14, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-22, 14, 2000, {.forwards = false, .maxSpeed = 60}, false);
+    backClaw.set_value(true);
+    // move to intake red rings
+    chassis.turnToPoint(-36, 4, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(-36, 4, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-20, 14, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-52, 14, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-52, 14, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    pros::delay(250);
+    chassis.moveToPoint(-18, 14, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-20, 32, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-20, 32, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(-52, 32, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-52, 32, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(-56, 56, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-56, 56, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    pros::Task task1{[=] {
+        // outtake while robot is still moving
+        pros::delay(1500);
+        intake.move_voltage(-12000);
+        }
+    };
+    chassis.moveToPoint(-58, 0, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    // drop mobile goal in corner
+    backClaw.set_value(false);
+    pros::delay(250);
+    chassis.moveToPoint(-50, 14, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(20, 14, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(20, 14, 2000, {.forwards = false, .maxSpeed = 90}, false);
+    backClaw.set_value(true);
+    intake.brake();
+    chassis.turnToPoint(42, 4, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(42, 4, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(18, 14, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(54, 14, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(54, 14, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    pros::delay(250);
+    chassis.moveToPoint(18, 14, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(20, 32, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(20, 32, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(52, 32, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(52, 32, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(56, 56, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(56, 56, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    
 
 }
 
@@ -364,7 +419,7 @@ void autonomous() {
     right_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     pros::delay(50);
     // Auton Function
-    BlueLeftRush();
+    Skills();
 }
 
 /**
