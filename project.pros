@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "BlueRight",
+    "project_name": "ArcadeSkills",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -298,8 +298,8 @@
       }
     },
     "upload_options": {
-      "description": "Blue Right Side",
-      "slot": 5
+      "description": "ArcadeS",
+      "slot": 6
     },
     "use_early_access": false
   }

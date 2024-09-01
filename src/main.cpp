@@ -326,7 +326,7 @@ void Skills() {
     // set position to x:0, y:0, heading:0
     chassis.setPose(0, 0, 0);
     // move back to alliance stake
-    chassis.moveToPoint(0, -4, 2000, {.forwards = false, .maxSpeed = 30}, false);
+    chassis.moveToPoint(0, -2, 2000, {.forwards = false, .maxSpeed = 30}, false);
     // run intake to score preload on alliance stake
     intake.move_voltage(12000);
     pros::delay(500);
@@ -354,7 +354,7 @@ void Skills() {
     chassis.turnToPoint(-56, 58, 2000, {.forwards = true, .maxSpeed = 127}, false);
     chassis.moveToPoint(-56, 58, 2000, {.forwards = true, .maxSpeed = 60}, false);
     pros::delay(250);
-    chassis.moveToPoint(-60, 10, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-58, 8, 2000, {.forwards = false, .maxSpeed = 127}, false);
     // drop mobile goal in corner
     backClaw.set_value(false);
     intake.move_voltage(-12000);
@@ -379,18 +379,25 @@ void Skills() {
     chassis.turnToPoint(52, 60, 2000, {.forwards = true, .maxSpeed = 127}, false);
     chassis.moveToPoint(52, 60, 2000, {.forwards = true, .maxSpeed = 60}, false);
     pros::delay(250);
-    chassis.moveToPoint(58, 12, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(60, 10, 2000, {.forwards = false, .maxSpeed = 127}, false);
     backClaw.set_value(false);
     intake.move_voltage(-12000);
     pros::delay(500);
-    chassis.moveToPoint(50, 114, 3000, {.forwards = true, .maxSpeed = 127}, false);
-    intake.brake();
-    chassis.turnToPoint(24, 116, 2000, {.forwards = false, .maxSpeed = 127}, false);
-    chassis.moveToPoint(24, 116, 2000, {.forwards = false, .maxSpeed = 60}, false);
-    backClaw.set_value(true);
+    chassis.moveToPoint(50, 70, 3000, {.forwards = true, .maxSpeed = 127}, false);
     intake.move_voltage(12000);
-    chassis.moveToPoint(50, 114, 3000, {.forwards = true, .maxSpeed = 60}, false);
-
+    chassis.turnToPoint(28, 88, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(28, 88, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    intake.brake();
+    chassis.turnToPoint(4, 120, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(4, 120, 2000, {.forwards = false, .maxSpeed = 60}, false);
+    backClaw.set_value(true);
+    pros::delay(250);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(-48, 124, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    pros::delay(250);
+    backClaw.set_value(false);
+    left_motors.move_voltage(3000);
+    right_motors.move_voltage(3000);
 
 }
 
@@ -444,7 +451,7 @@ void autonomous() {
     right_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     pros::delay(50);
     // Auton Function
-    BlueRight();
+    Skills();
 }
 
 /**
@@ -462,25 +469,38 @@ void autonomous() {
  */
 
 void opcontrol() {
+
     pros::Controller controller(pros::E_CONTROLLER_MASTER);
     bool backClawOpened = false;
     bool backClawClosed = true;
     bool hangUp = false;
     bool hangDown = true;
+
     // loop forever
+
     while (true) {
+        //Tank drive
         // get left y and right y positions
-        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        /*int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
         // move the robot
-        chassis.tank(leftY, rightY);
+        chassis.tank(leftY, rightY);*/
+
+        //Arcade drive
+        // get left y and right x positions
+        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+
+        // move the robot
+        chassis.arcade(leftY, rightX);
+    
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-            intake.move_voltage(12000);
+            intake.move_voltage(-12000);
         }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            intake.move_voltage(-12000);
+            intake.move_voltage(12000);
         }
         else {
                 intake.move_voltage(0);
