@@ -160,7 +160,8 @@ void RedLeft() {
     chassis.moveToPoint(4, -42, 2000, {.forwards = false, .maxSpeed = 127}, false);
     chassis.moveToPoint(16, -24, 2000, {.forwards = true, .maxSpeed = 60}, false);
     chassis.turnToPoint(-18, -34, 2000, {.forwards = false, .maxSpeed = 127}, false);
-    pros::delay(250);
+    pros::delay(100);
+    intake.brake();
     chassis.moveToPoint(-18, -34, 2000, {.forwards = false, .maxSpeed = 127}, false);
 }
 
@@ -219,7 +220,8 @@ void BlueRight() {
     chassis.moveToPoint(0, -48, 2000, {.forwards = false, .maxSpeed = 127}, false);
     chassis.moveToPoint(-18, -16, 2000, {.forwards = true, .maxSpeed = 60}, false);
     chassis.turnToPoint(20, -44, 2000, {.forwards = false, .maxSpeed = 127}, false);
-    pros::delay(250);
+    pros::delay(100);
+    intake.brake();
     chassis.moveToPoint(20, -44, 2000, {.forwards = false, .maxSpeed = 127}, false);
 }
 
@@ -227,7 +229,7 @@ void BlueRightElim() {
     // set position to x:0, y:0, heading:0
     chassis.setPose(0, 0, 0);
     backClaw.set_value(false);
-    // move  backwards to mobile goal
+    // move backwards to mobile goal
     pros::Task task1{[=] {
         // pick up mobile goal while robot is still moving
         pros::delay(1000);
@@ -330,16 +332,15 @@ void Skills() {
     chassis.turnToPoint(54, 106, 1500, {.forwards = true, .maxSpeed = 127}, false);
     chassis.moveToPoint(54, 106, 1500, {.forwards = true, .maxSpeed = 75}, false);
     chassis.turnToPoint(0, 52, 1500, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(60, 114, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    backClaw.set_value(false);
+    intake.brake();
+    chassis.moveToPoint(64, 114, 1500, {.forwards = false, .maxSpeed = 127}, false);
     /*left_motors.move_voltage(-4500);
     right_motors.move_voltage(-4500);
     pros::delay(500);
     left_motors.brake();
     right_motors.brake();*/
     hang.set_value(true);
-    backClaw.set_value(false);
-    intake.brake();
-    pros::delay(250);
     chassis.moveToPoint(0, 52, 1500, {.forwards = true, .maxSpeed = 90}, false);
     //chassis.moveToPoint(-60, 110, 2000, {.forwards = true, .maxSpeed = 127}, false);
 }
@@ -402,7 +403,7 @@ void autonomous() {
     right_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     pros::delay(50);
     // Auton Function
-    Skills();
+    BlueRight();
 }
 
 /**
