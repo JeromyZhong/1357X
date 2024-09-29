@@ -33,6 +33,10 @@ lemlib::Drivetrain drivetrain(
 //Inertial Sensor
 pros::Imu inertial_sensor(19);
 
+//Distance Sensor
+pros::Distance right_distance_sensor(8); //Right
+pros::Distance back_distance_sensor(7); //Back
+
 //v5 Rotation Sensor
 //pros::Rotation horizontal_encoder(14);
 
@@ -345,6 +349,16 @@ void Skills() {
     //chassis.moveToPoint(-60, 110, 2000, {.forwards = true, .maxSpeed = 127}, false);
 }
 
+void Test() {
+    while (back_distance_sensor.get() < 10){ //Go to matchload bar code
+        left_motors.move_voltage((10-back_distance_sensor.get())*24);
+        right_motors.move_voltage((10-back_distance_sensor.get())*24);
+        pros::delay(20);
+    }
+    left_motors.brake();
+    right_motors.brake();
+}
+
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
@@ -357,6 +371,9 @@ void initialize() {
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
             // print measurements from the rotation sensor
             //pros::lcd::print(3, "Rotation Sensor: %i", horizontal_encoder.get_position());
+            // print measurements from the distance sensors
+            pros::lcd::print(3, "rightDistanceSensor: %f", fmt::to_string((right_distance_sensor.get())));
+            pros::lcd::print(4, "backDistanceSensor: %f", fmt::to_string((back_distance_sensor.get())));
             // delay to save resources
             pros::delay(50);
         }
@@ -403,7 +420,7 @@ void autonomous() {
     right_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     pros::delay(50);
     // Auton Function
-    BlueRight();
+    Test();
 }
 
 /**
