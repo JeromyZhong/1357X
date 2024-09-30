@@ -35,7 +35,7 @@ pros::Imu inertial_sensor(19);
 
 //Distance Sensor
 pros::Distance right_distance_sensor(8); //Right
-pros::Distance back_distance_sensor(7); //Back
+pros::Distance front_distance_sensor(7); //Back
 
 //v5 Rotation Sensor
 //pros::Rotation horizontal_encoder(14);
@@ -268,58 +268,65 @@ void Skills() {
     pros::delay(250);
     intake.brake();
     // move to mobile goal on left
-    chassis.moveToPoint(0, 14, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.turnToPoint(-22, 14, 2000, {.forwards = false, .maxSpeed = 127}, false);
-    chassis.moveToPoint(-22, 14, 2000, {.forwards = false, .maxSpeed = 60}, false);
+    chassis.moveToPoint(0, 14, 1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-22, 14, 1500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-22, 14, 1500, {.forwards = false, .maxSpeed = 60}, false);
     backClaw.set_value(true);
     // move to intake red ring
-    chassis.turnToPoint(-24, 36, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-24, 36, 1500, {.forwards = true, .maxSpeed = 127}, false);
     intake.move_voltage(12000);
-    chassis.moveToPoint(-24, 36, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-24, 36, 1500, {.forwards = true, .maxSpeed = 60}, false);
     // move to intake red ring near wall stake
-    chassis.turnToPoint(-56, 58, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(-56, 58, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.turnToPoint(-44, 60, 2000, {.forwards = false, .maxSpeed = 127}, false);
-    chassis.moveToPoint(-44, 60, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-56, 58, 1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-56, 58, 1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-44, 60, 1500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-44, 60, 1500, {.forwards = false, .maxSpeed = 127}, false);
     // move to intake three red rings in line
-    chassis.turnToPoint(-46, 0, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(-46, 0, 2000, {.forwards = true, .maxSpeed = 45}, false);
+    chassis.turnToPoint(-46, 0, 1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-46, 0, 1500, {.forwards = true, .maxSpeed = 45}, false);
     pros::delay(1500);
-    chassis.turnToPoint(-58, 16, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(-58, 16, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(-58, 16,1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-58, 16, 1500, {.forwards = true, .maxSpeed = 60}, false);
     pros::delay(500);
     // drop mobile goal in corner
-    chassis.turnToPoint(-64, 0, 2000, {.forwards = false, .maxSpeed = 127}, false);
-    chassis.moveToPoint(-64, 0, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-64, 0, 1500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-64, 0, 1500, {.forwards = false, .maxSpeed = 127}, false);
     backClaw.set_value(false);
     pros::delay(250);
     // move to mobile goal on other side
-    chassis.moveToPoint(-50, 10, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.turnToPoint(18, 8, 2000, {.forwards = false, .maxSpeed = 127}, false);
-    chassis.moveToPoint(18, 8, 2000, {.forwards = false, .maxSpeed = 90}, false);
+    chassis.moveToPoint(-50, 12, 1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(18, 10, 1500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(18, 10, 1500, {.forwards = false, .maxSpeed = 90}, false);
     backClaw.set_value(true);
     // move to intake red ring
-    chassis.turnToPoint(16, 28, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(16, 28, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(16, 28, 1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(16, 28, 1500, {.forwards = true, .maxSpeed = 60}, false);
     // move to intake red ring near wall stake
-    chassis.turnToPoint(48, 58, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(48, 58, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.turnToPoint(38, 60, 2000, {.forwards = false, .maxSpeed = 127}, false);
-    chassis.moveToPoint(38, 60, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(48, 58, 1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(48, 58, 1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(38, 60, 1500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(38, 60, 1500, {.forwards = false, .maxSpeed = 127}, false);
     // move to intake three red rings in line
-    chassis.turnToPoint(40, -8, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(40, -8, 2000, {.forwards = true, .maxSpeed = 45}, false);
+    /*chassis.turnToPoint(40, -8, 1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(40, -8, 1500, {.forwards = true, .maxSpeed = 45}, false);*/
+    while (front_distance_sensor.get() < 1600 && front_distance_sensor.get() > 575) { 
+        left_motors.move_voltage((-(1600-front_distance_sensor.get()))*15);
+        right_motors.move_voltage((-(1600-front_distance_sensor.get()))*15);
+        pros::delay(20);
+    }
+    left_motors.brake();
+    right_motors.brake();
     pros::delay(1500);
-    chassis.turnToPoint(52, 14, 2000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(52, 14, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.turnToPoint(52, 14, 1500, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(52, 14, 1500, {.forwards = true, .maxSpeed = 60}, false);
     pros::delay(500);
     // drop mobile goal in corner
-    chassis.turnToPoint(56, -4, 2000, {.forwards = false, .maxSpeed = 127}, false);
-    chassis.moveToPoint(56, -4, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(56, -4, 1500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(56, -4, 1500, {.forwards = false, .maxSpeed = 127}, false);
     backClaw.set_value(false);
     pros::delay(250);
     // move to blue alliance side
-    chassis.moveToPoint(40, 66, 2000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(40, 66, 1500, {.forwards = true, .maxSpeed = 127}, false);
     chassis.turnToPoint(16, 84, 1500, {.forwards = true, .maxSpeed = 127}, false);
     chassis.moveToPoint(16, 84, 1500, {.forwards = true, .maxSpeed = 60}, false);
     intake.brake();
@@ -350,9 +357,9 @@ void Skills() {
 }
 
 void Test() {
-    while (back_distance_sensor.get() < 10){ //Go to matchload bar code
-        left_motors.move_voltage((10-back_distance_sensor.get())*24);
-        right_motors.move_voltage((10-back_distance_sensor.get())*24);
+    while (front_distance_sensor.get() < 1200){ //Go to matchload bar code
+        left_motors.move_voltage((-(1200-front_distance_sensor.get()))*20);
+        right_motors.move_voltage((-(1200-front_distance_sensor.get()))*20);
         pros::delay(20);
     }
     left_motors.brake();
@@ -373,7 +380,7 @@ void initialize() {
             //pros::lcd::print(3, "Rotation Sensor: %i", horizontal_encoder.get_position());
             // print measurements from the distance sensors
             pros::lcd::print(3, "rightDistanceSensor: %f", fmt::to_string((right_distance_sensor.get())));
-            pros::lcd::print(4, "backDistanceSensor: %f", fmt::to_string((back_distance_sensor.get())));
+            pros::lcd::print(4, "frontDistanceSensor: %f", fmt::to_string((front_distance_sensor.get())));
             // delay to save resources
             pros::delay(50);
         }
@@ -420,7 +427,7 @@ void autonomous() {
     right_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     pros::delay(50);
     // Auton Function
-    Test();
+    Skills();
 }
 
 /**
