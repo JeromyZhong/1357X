@@ -17,21 +17,21 @@
 	#include <cmath> 
 
 // Drivetrain Motors
-pros::MotorGroup left_motors({-18, -17, -16}, pros::MotorGearset::green); // left motors on ports 1, 2, 3; all forwards
-pros::MotorGroup right_motors({13, 14, 15}, pros::MotorGearset::green); // right motors on ports 4, 5, 6; all forwards
+pros::MotorGroup left_motors({-18, -19, -20}, pros::MotorGearset::green); // left motors on ports 1, 2, 3; all forwards
+pros::MotorGroup right_motors({11, 12, 13}, pros::MotorGearset::green); // right motors on ports 4, 5, 6; all forwards
 
 // Drivetrain Settings
 lemlib::Drivetrain drivetrain(
 	&left_motors, // left motor group
 	&right_motors, // right motor group
-    11.5, // 11 inch track width
+    10.5, // 11 inch track width
     lemlib::Omniwheel::OLD_325, // using old 3.25" omnis
     450, // drivetrain rpm is 450
     2 // horizontal drift is 2 (for now)
 );
 
 //Inertial Sensor
-pros::Imu inertial_sensor(19);
+pros::Imu inertial_sensor(1);
 
 //Final Configuration of sensors
 lemlib::OdomSensors sensors(
@@ -45,27 +45,27 @@ lemlib::OdomSensors sensors(
 // PID Constants
 // Lateral PID Controller
 lemlib::ControllerSettings lateral_controller(
-    9, // proportional gain (kP)
+    10, // proportional gain (kP)
     0, // integral gain (kI)
-    70, // derivative gain (kD)
+    50, // derivative gain (kD)
     3, // anti windup
-    0.5, // small error range, in inches
+    1, // small error range, in inches
     250, // small error range timeout, in milliseconds
     3, // large error range, in inches
     500, // large error range timeout, in milliseconds
-    0 // maximum acceleration (slew)
+    20 // maximum acceleration (slew)
 );
 
 // Angular PID Controller
 lemlib::ControllerSettings angular_controller(
-    1.75, // proportional gain (kP)
-    0, // integral gain (kI)
-    10, // derivative gain (kD)
-    3, // anti windup
+    2.5, // proportional gain (kP)
+    0.15, // integral gain (kI)
+    18, // derivative gain (kD)
+    10, // anti windup
     0.5, // small error range, in degrees
-    250, // small error range timeout, in milliseconds
+    200, // small error range timeout, in milliseconds
     3, // large error range, in degrees
-    500, // large error range timeout, in milliseconds
+    600, // large error range timeout, in milliseconds
     0 // maximum acceleration (slew)
 );
 
@@ -174,6 +174,7 @@ void RedRightRush() {
     left_motors.brake();
     right_motors.brake();*/
 
+
 }
 
 void RedLeft() {
@@ -196,66 +197,6 @@ void RedLeft() {
     chassis.turnToPoint(4, -22, 2000, {.forwards = false}, false);
     chassis.moveToPoint(4, -22, 2000, {.forwards = false}, false);
     chassis.turnToHeading(135, 2000);
-
-}
-
-void BlueLeftRush() {
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPoint(3, -27, 2000, {.forwards = false}, false);
-    chassis.moveToPoint(10, -36, 2000, {.forwards = false}, false);
-    left_motors.move_voltage(-3000);
-    right_motors.move_voltage(-3500);
-    pros::delay(400);
-    left_motors.brake();
-    right_motors.brake();
-    left_motors.move_voltage(3000);
-    right_motors.move_voltage(3000);
-    pros::delay(1000);
-    left_motors.brake();
-    right_motors.brake();
-    chassis.moveToPoint(-5, -32, 2000, {.forwards = false}, false);
-    left_motors.move_voltage(-4000);
-    right_motors.move_voltage(-3000);
-    pros::delay(500);
-    left_motors.brake();
-    right_motors.brake();
-    chassis.moveToPoint(10, -34, 2000, {.forwards = true}, false);
-    left_motors.move_voltage(3000);
-    right_motors.move_voltage(3000);
-    pros::delay(500);
-    left_motors.brake();
-    right_motors.brake();
-    chassis.moveToPoint(-16, -14, 2000, {.forwards = true}, false);
-    left_motors.move_voltage(3000);
-    right_motors.move_voltage(3000);
-    pros::delay(500);
-    left_motors.brake();
-    right_motors.brake();
-    chassis.moveToPoint(-20, 8, 2000, {.forwards = false}, false);
-    left_motors.move_voltage(12000);
-    right_motors.move_voltage(12000);
-    pros::delay(750);
-    left_motors.brake();
-    right_motors.brake();
-}
-
-void Skills() {
-    chassis.setPose(0, 0, 0);
-    chassis.moveToPoint(0, -5, 3000, {.forwards = false, .maxSpeed = 10}, false);
-    pros::delay(750);
-    chassis.moveToPoint(0, 8, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.turnToPoint(-24, 8, 3000, {.forwards = false, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-24, 8, 3000, {.forwards = false, .maxSpeed = 30}, false);
-    chassis.turnToPoint(-24, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-24, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.turnToPoint(-58, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-58, 32, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.turnToPoint(-58, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-58, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.turnToPoint(-64, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-64, 10, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.turnToPoint(-64, 4, 3000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(-64, 4, 3000, {.forwards = true, .maxSpeed = 60}, false);
 
 }
 
@@ -305,12 +246,8 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-    //Set Motors to Brake
-    left_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    right_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    pros::delay(50);
     // Auton Function
-    RedRightRush();
+    RedLeft();
 }
 
 /**
@@ -326,11 +263,9 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 void opcontrol() {
-    pros::Controller controller(pros::E_CONTROLLER_MASTER);
-    bool backClawOpened = true;
-    bool backClawClosed = false;
     // loop forever
     while (true) {
         // get left y and right y positions
@@ -340,41 +275,7 @@ void opcontrol() {
         // move the robot
         chassis.tank(leftY, rightY);
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-            intake.move_voltage(12000);
-        }
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            intake.move_voltage(-12000);
-        }
-        else {
-                intake.move_voltage(0);
-        }
-
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2) and backClawOpened) {
-            if (backClawClosed) {
-                backClaw.set_value(false);
-                backClawClosed = false;
-            }
-            else if (not backClawClosed and backClawOpened){
-                backClaw.set_value(true);
-                backClawClosed = true;
-            }
-            backClawOpened = false;
-        }
-
-        if (not controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-            backClawOpened = true;
-        }
-
-        /*if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-            backClaw.set_value(true);
-        }
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            backClaw.set_value(false);
-        }*/
-
-         // delay to save resources
+        // delay to save resources
         pros::delay(25);
-
     }
 }
