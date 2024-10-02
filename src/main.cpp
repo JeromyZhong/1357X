@@ -381,7 +381,7 @@ void initialize() {
             // print measurements from the distance sensors
             pros::lcd::print(3, "rightDistanceSensor: %f", fmt::to_string((right_distance_sensor.get())));
             pros::lcd::print(4, "frontDistanceSensor: %f", fmt::to_string((front_distance_sensor.get())));
-            // delay to save resources
+            // delay to save resources 
             pros::delay(50);
         }
     });
