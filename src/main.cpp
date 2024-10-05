@@ -35,7 +35,7 @@ pros::Imu inertial_sensor(19);
 
 //Distance Sensor
 pros::Distance right_distance_sensor(8); //Right
-pros::Distance front_distance_sensor(7); //Back
+pros::Distance back_distance_sensor(7); //Back
 
 //v5 Rotation Sensor
 //pros::Rotation horizontal_encoder(14);
@@ -309,9 +309,9 @@ void Skills() {
     // move to intake three red rings in line
     /*chassis.turnToPoint(40, -8, 1500, {.forwards = true, .maxSpeed = 127}, false);
     chassis.moveToPoint(40, -8, 1500, {.forwards = true, .maxSpeed = 45}, false);*/
-    while (front_distance_sensor.get() < 1600 && front_distance_sensor.get() > 575) { 
-        left_motors.move_voltage((-(1600-front_distance_sensor.get()))*15);
-        right_motors.move_voltage((-(1600-front_distance_sensor.get()))*15);
+    while (back_distance_sensor.get() < 1600 && back_distance_sensor.get() > 575) { 
+        left_motors.move_voltage((-(1600-back_distance_sensor.get()))*15);
+        right_motors.move_voltage((-(1600-back_distance_sensor.get()))*15);
         pros::delay(20);
     }
     left_motors.brake();
@@ -357,9 +357,9 @@ void Skills() {
 }
 
 void Test() {
-    while (front_distance_sensor.get() < 1200){ //Go to matchload bar code
-        left_motors.move_voltage((-(1200-front_distance_sensor.get()))*20);
-        right_motors.move_voltage((-(1200-front_distance_sensor.get()))*20);
+    while (back_distance_sensor.get() < 1200){ //Go to matchload bar code
+        left_motors.move_voltage((-(1200-back_distance_sensor.get()))*20);
+        right_motors.move_voltage((-(1200-back_distance_sensor.get()))*20);
         pros::delay(20);
     }
     left_motors.brake();
@@ -380,7 +380,7 @@ void initialize() {
             //pros::lcd::print(3, "Rotation Sensor: %i", horizontal_encoder.get_position());
             // print measurements from the distance sensors
             pros::lcd::print(3, "rightDistanceSensor: %f", fmt::to_string((right_distance_sensor.get())));
-            pros::lcd::print(4, "frontDistanceSensor: %f", fmt::to_string((front_distance_sensor.get())));
+            pros::lcd::print(4, "backDistanceSensor: %f", fmt::to_string((back_distance_sensor.get())));
             // delay to save resources 
             pros::delay(50);
         }
