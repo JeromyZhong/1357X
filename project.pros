@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "ArcadeSkills",
+    "project_name": "RedRightSoloSigWP",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -298,8 +298,8 @@
       }
     },
     "upload_options": {
-      "description": "skills",
-      "slot": 6
+      "description": "red right side solo wp for sigs",
+      "slot": 8
     },
     "use_early_access": false
   }
