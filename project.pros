@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "RedRightSigSoloWP",
+    "project_name": "Test",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -298,7 +298,7 @@
       }
     },
     "upload_options": {
-      "description": "red right side solo wp for sigs",
+      "description": "test",
       "slot": 8
     },
     "use_early_access": false
