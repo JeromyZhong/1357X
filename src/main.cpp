@@ -136,13 +136,13 @@ void RedRightRush() {
     pros::delay(250);
     backClaw.set_value(false);
     chassis.moveToPoint(-10, -38, 1000, {.forwards= true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(10, -38, 1000, {.forwards = false, .maxSpeed = 90}, false);
+    chassis.moveToPoint(12, -38, 1000, {.forwards = false, .maxSpeed = 90}, false);
     backClaw.set_value(true);
     pros::delay(250);
     intake.move_voltage(12000);
     pros::delay(500);
     chassis.turnToPoint(48, -6, 1000, {.forwards = true, .maxSpeed = 127}, false);
-    pros::Task task2{[=] {
+    /*pros::Task task2{[=] {
         optical_sensor.set_led_pwm(100);
         while (true) {
             // double current_hue = optical_sensor.get_hue();
@@ -157,7 +157,8 @@ void RedRightRush() {
             }
         }
         }
-    };
+    };*/
+    intake.brake();
     chassis.moveToPoint(48, -6, 3000, {.forwards = true, .maxSpeed = 30}, false);
     chassis.moveToPoint(10, -36, 1000, {.forwards = false, .maxSpeed = 127}, false);
     hang.set_value(true);
@@ -230,7 +231,7 @@ void BlueLeftRush() {
     intake.move_voltage(12000);
     pros::delay(500);
     chassis.turnToPoint(-48, 0, 1000, {.forwards = true, .maxSpeed = 127}, false);
-    pros::Task task2{[=] {
+    /*pros::Task task2{[=] {
         optical_sensor.set_led_pwm(100);
         while (true) {
             // double current_hue = optical_sensor.get_hue();
@@ -245,7 +246,8 @@ void BlueLeftRush() {
             }
         }
         }
-    };
+    };*/
+    intake.brake();
     chassis.moveToPoint(-48, 0, 3000, {.forwards = true, .maxSpeed = 30}, false);
     chassis.moveToPoint(-14, -18, 1000, {.forwards = false, .maxSpeed = 127}, false);
     hang.set_value(true);
@@ -559,26 +561,26 @@ void opcontrol() {
     while (true) {
         //Tank drive
         // get left y and right y positions
-        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        /*int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
         // move the robot
-        chassis.tank(leftY, rightY);
+        chassis.tank(leftY, rightY);*/
 
         //Arcade drive
         // get left y and right x positions
-        /*int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // move the robot
-        chassis.arcade(leftY, rightX);*/
+        chassis.arcade(leftY, rightX);
     
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-            intake.move_voltage(12000);
+            intake.move_voltage(-12000);
         }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            intake.move_voltage(-12000);
+            intake.move_voltage(12000);
         }
         else {
                 intake.move_voltage(0);

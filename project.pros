@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "RedRightRush",
+    "project_name": "ArcadeSkills",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -298,8 +298,8 @@
       }
     },
     "upload_options": {
-      "description": "red right side rush",
-      "slot": 2
+      "description": "arcade skills",
+      "slot": 5
     },
     "use_early_access": false
   }
