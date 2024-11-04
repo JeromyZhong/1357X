@@ -528,7 +528,7 @@ void autonomous() {
     right_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     pros::delay(50);
     // Auton Function
-    RedRightRush();
+    Skills();
 }
 
 /**
