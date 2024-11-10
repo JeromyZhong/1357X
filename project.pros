@@ -299,7 +299,7 @@
     },
     "upload_options": {
       "description": "arcade skills",
-      "slot": 5
+      "slot": 6
     },
     "use_early_access": false
   }
