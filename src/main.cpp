@@ -17,13 +17,10 @@
 	#include <cmath> 
 
 // Drivetrain Motors
-<<<<<<< HEAD
 pros::MotorGroup left_motors({-18, -19, -20}, pros::MotorGearset::green); // left motors on ports 1, 2, 3; all forwards
 pros::MotorGroup right_motors({11, 12, 13}, pros::MotorGearset::green); // right motors on ports 4, 5, 6; all forwards
-=======
 pros::MotorGroup left_motors({-18, -17, -16}, pros::MotorGearset::green); // left motors on ports 11, 12, 13; all reverse
 pros::MotorGroup right_motors({13, 14, 15}, pros::MotorGearset::green); // right motors on ports 18, 19, 20; all forwards
->>>>>>> 8c74add15e59a04de77fc0db231a4c1d08e75dba
 
 // Drivetrain Settings
 lemlib::Drivetrain drivetrain(
@@ -64,19 +61,16 @@ lemlib::OdomSensors sensors(
 // PID Constants
 // Lateral PID Controller
 lemlib::ControllerSettings lateral_controller(
-<<<<<<< HEAD
     10, // proportional gain (kP)
     0, // integral gain (kI)
     50, // derivative gain (kD)
     3, // anti windup
     1, // small error range, in inches
-=======
     6, // proportional gain (kP)
     0, // integral gain (kI)
     14, // derivative gain (kD)
     0, // anti windup
     0.5, // small error range, in inches
->>>>>>> 8c74add15e59a04de77fc0db231a4c1d08e75dba
     250, // small error range timeout, in milliseconds
     2, // large error range, in inches
     500, // large error range timeout, in milliseconds
@@ -171,7 +165,6 @@ void RedRightRush() {
     pros::delay(250);
     intake.move_voltage(12000);
     pros::delay(500);
-<<<<<<< HEAD
     left_motors.brake();
     right_motors.brake();
     chassis.moveToPoint(-10, -34, 2000, {.forwards = true}, false);
@@ -194,7 +187,6 @@ void RedRightRush() {
     right_motors.brake();*/
 
 
-=======
     chassis.turnToPoint(48, -6, 1000, {.forwards = true, .maxSpeed = 127}, false);
     /*pros::Task task2{[=] {
         optical_sensor.set_led_pwm(100);
@@ -217,7 +209,6 @@ void RedRightRush() {
     chassis.moveToPoint(10, -36, 1000, {.forwards = false, .maxSpeed = 127}, false);
     hang.set_value(true);
     chassis.moveToPoint(28, -50, 1000, {.forwards = false, .maxSpeed = 127}, false); 
->>>>>>> 8c74add15e59a04de77fc0db231a4c1d08e75dba
 }
 
 void RedLeftSimpleWP() {
@@ -258,8 +249,6 @@ void RedLeftSimpleWP() {
     chassis.moveToPoint(50, -12, 2000, {.forwards = false, .maxSpeed = 127}, false);
 }
 
-<<<<<<< HEAD
-=======
 void BlueLeftRush() {
     // set position to x:0, y:0, heading:0
     chassis.setPose(0, 0, 0);
@@ -524,7 +513,6 @@ void Test() {
 
 }
 
->>>>>>> 8c74add15e59a04de77fc0db231a4c1d08e75dba
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
