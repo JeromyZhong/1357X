@@ -473,7 +473,7 @@ void BlueRightSimpleWP() {
     //chassis.moveToPoint(2, -12, 1000, {.forwards = false, .maxSpeed = 127}, false);
 }
 
-void BlueRightSoloWP() {
+void BlueRightSigWP() {
     chassis.setPose(0, -8, 0);
     //chassis.mov
     // eToPoint(0, -9, 750, {.forwards = false, .maxSpeed = 127}, false);
@@ -870,7 +870,7 @@ void autonomous() {
         }
     }
     };
-    Skills();
+    RedLeftSigWP();
 }
 
 /**
@@ -905,19 +905,19 @@ void opcontrol() {
     while (true) {
         //Tank drive
         // get left y and right y positions
-        /*int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
         // move the robot
-        chassis.tank(leftY, rightY);*/
+        chassis.tank(leftY, rightY);
 
         //Arcade drive
         // get left y and right x positions
-        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        /*int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // move the robot
-        chassis.arcade(leftY, rightX);
+        chassis.arcade(leftY, rightX);*/
     
         //while (intakeStop == false) {
             if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
