@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "RedLeftSigWP",
+    "project_name": "BlueLeftRush",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -298,8 +298,8 @@
       }
     },
     "upload_options": {
-      "description": "red left side sig wp",
-      "slot": 1
+      "description": "blue left side rush",
+      "slot": 6
     },
     "use_early_access": false
   }
