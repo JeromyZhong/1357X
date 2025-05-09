@@ -200,11 +200,11 @@ void liftControl() {
 bool intakeStop = false;
 void redColorSort() {
         int ring_hue = optical_sensor.get_hue();
-        if (ring_hue < 240 && ring_hue > 210) {
+        if (ring_hue < 230 && ring_hue > 220) {
             //intakeStop = true;
-            pros::delay(105);
+            pros::delay(10);
             intake.move_voltage(-12000);
-            pros::delay(75);
+            pros::delay(150);
             intake.move_voltage(12000);
         }
         //intakeStop = false;
@@ -214,9 +214,9 @@ void blueColorSort() {
     int ring_hue = optical_sensor.get_hue();
         if (ring_hue < 20 && ring_hue > 0) {
             //intakeStop = true;
-            pros::delay(105);
+            pros::delay(10);
             intake.move_voltage(-12000);
-            pros::delay(75);
+            pros::delay(150);
             intake.move_voltage(12000);
         }
         //intakeStop = false;
@@ -345,23 +345,23 @@ void RedLeftSimpleWP() {
     chassis.moveToPoint(-32, 26, 1000, {.forwards = true, .maxSpeed = 45}, false);
     pros::delay(100);
     chassis.moveToPoint(-32, 10, 1000, {.forwards = false, .maxSpeed = 127}, false);*/
-    chassis.turnToPoint(51, 20, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(48, 20, 1000, {.forwards = true, .maxSpeed = 127}, false);
     intake.move_voltage(12000);
-    chassis.moveToPoint(51, 20, 1000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(48, 20, 1000, {.forwards = true, .maxSpeed = 60}, false);
     //chassis.turnToPoint(42, 28, 1000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(55, 38, 1000, {.forwards = true, .maxSpeed = 60}, false);
-    chassis.moveToPoint(36, 20, 1000, {.forwards = false, .maxSpeed = 127}, false);
-    chassis.turnToPoint(36, 40, 1000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(36, 40, 1000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.turnToPoint(-8, 60, 1000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.moveToPoint(-8, 60, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(52, 38, 1000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(34, 20, 1000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(34, 40, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(34, 40, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-8, 58, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-8, 58, 2000, {.forwards = true, .maxSpeed = 60}, false);
     pros::delay(250);
     pros::Task task4{[=] {
         pros::delay(800);
         intake.brake();        
         }
     };
-    chassis.moveToPoint(46, 2, 1250, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(46, 3, 1250, {.forwards = false, .maxSpeed = 127}, false);
     nextState();
     //chassis.moveToPoint(8, -12, 1000, {.forwards = false, .maxSpeed = 127}, false);
 }
@@ -384,7 +384,7 @@ void RedLeftSigWP() {
         intake.brake();        
         }
     };
-    chassis.moveToPoint(17, -14, 750, {.forwards = true, .maxSpeed = 45}, false);
+    chassis.moveToPoint(18, -14, 750, {.forwards = true, .maxSpeed = 45}, false);
     pros::Task task3{[=] {
         pros::delay(900);
         backClaw.set_value(true);       
@@ -407,15 +407,15 @@ void RedLeftSigWP() {
         backClaw.set_value(true);       
         }
     };
-    chassis.moveToPoint(42, -28, 1000, {.forwards = false, .maxSpeed = 90}, false);
+    chassis.moveToPoint(40, -32, 1000, {.forwards = false, .maxSpeed = 90}, false);
     //backClaw.set_value(true);
     pros::delay(250);
-    chassis.turnToPoint(46, -54, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(42, -56, 1000, {.forwards = true, .maxSpeed = 127}, false);
     intake.move_voltage(12000);
-    chassis.moveToPoint(46, -54, 1000, {.forwards = true, .maxSpeed = 90}, false);
+    chassis.moveToPoint(42, -56, 1000, {.forwards = true, .maxSpeed = 90}, false);
     pros::delay(750);
     intake.brake();
-    chassis.moveToPoint(60, -22, 1250, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(58, -22, 1250, {.forwards = false, .maxSpeed = 127}, false);
     descoreState();
 }
 
@@ -479,13 +479,13 @@ void BlueLeftRush() {
     intake.brake();
     backClaw.set_value(false);
     chassis.moveToPoint(0, 20, 1000, {.forwards = true, .maxSpeed = 127}, false);
-    chassis.turnToPoint(-4, 36, 1000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-5, 36, 750, {.forwards = false, .maxSpeed = 127}, false);
     pros::Task task4{[=] {
         pros::delay(900);
         backClaw.set_value(true);
     }
     };
-    chassis.moveToPoint(-4, 36, 1000, {.forwards = false, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-5, 36, 1000, {.forwards = false, .maxSpeed = 60}, false);
     pros::delay(250);
     pros::Task task5{[=] {
         pros::delay(1000);
@@ -502,7 +502,7 @@ void BlueLeftRush() {
     chassis.moveToPoint(22, 5, 1000, {.forwards = true, .maxSpeed = 127}, false);
     backClaw.set_value(false);
     pros::delay(250);
-    chassis.turnToPoint(20, 35, 1000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(20, 35, 750, {.forwards = false, .maxSpeed = 127}, false);
     pros::Task task7{[=] {
         pros::delay(750);
         backClaw.set_value(true);
@@ -510,6 +510,7 @@ void BlueLeftRush() {
     };
     chassis.moveToPoint(20, 35, 1000, {.forwards = false, .maxSpeed = 127}, false);
     intake.move_voltage(12000);
+    chassis.moveToPoint(-16, 14, 1000, {.forwards = false, .maxSpeed = 127}, false);
 }
 
 void BlueRightSimpleWP() {
@@ -583,7 +584,7 @@ void BlueRightSigWP() {
         intake.brake();        
         }
     };
-    chassis.moveToPoint(-16, -14, 750, {.forwards = true, .maxSpeed = 45}, false);
+    chassis.moveToPoint(-18, -14, 750, {.forwards = true, .maxSpeed = 45}, false);
     pros::Task task3{[=] {
         pros::delay(850);
         backClaw.set_value(true);        
@@ -605,7 +606,7 @@ void BlueRightSigWP() {
         backClaw.set_value(true);       
         }
     };
-    chassis.moveToPoint(-42, -30, 1000, {.forwards = false, .maxSpeed = 90}, false);
+    chassis.moveToPoint(-42, -32, 1000, {.forwards = false, .maxSpeed = 90}, false);
     //backClaw.set_value(true);
     pros::delay(250);
     chassis.turnToPoint(-46, -56, 1000, {.forwards = true, .maxSpeed = 127}, false);
@@ -613,7 +614,7 @@ void BlueRightSigWP() {
     chassis.moveToPoint(-46, -56, 1000, {.forwards = true, .maxSpeed = 90}, false);
     pros::delay(750);
     intake.brake();
-    chassis.moveToPoint(-62, -22, 1500, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-62, -25, 1500, {.forwards = false, .maxSpeed = 127}, false);
     descoreState();
 }
 
@@ -642,6 +643,64 @@ void BlueRightNoAS() {
     chassis.turnToPoint(74, 22, 1000, {.forwards = true, .maxSpeed = 127}, false);
     chassis.moveToPoint(74, 22, 3000, {.forwards = true, .maxSpeed = 127}, false);
     chassis.moveToPoint(78, 25, 1000, {.forwards = true, .maxSpeed = 127}, false);
+}
+
+void RedRightSimple() {
+    chassis.setPose(0, 0, 0);
+    pros::Task task1{[=] {
+        pros::delay(900);
+        backClaw.set_value(true);        
+        }
+    };
+    chassis.moveToPoint(0, -26, 1500, {.forwards = false, .maxSpeed = 75}, false);
+    chassis.turnToPoint(-26, -26, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(-30, -26, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    descoreState();
+    chassis.turnToPoint(-46, 15, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-46, 16, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-38, 2, 1000, {.forwards = false, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-46, 16, 1000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-38, 2, 1000, {.forwards = false, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-46, 16, 1000, {.forwards = true, .maxSpeed = 60}, false);
+    pros::delay(1000);
+    intake.brake();
+    descoreState();
+    //chassis.moveToPoint(18, -36, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    //nextState();
+    chassis.turnToPoint(-16, -6, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-16, -6, 1000, {.forwards = true, .maxSpeed = 60}, false);
+    
+}
+
+void BlueLeftSimple() {
+    chassis.setPose(0, 0, 0);
+    pros::Task task1{[=] {
+        pros::delay(900);
+        backClaw.set_value(true);        
+        }
+    };
+    chassis.moveToPoint(0, -26, 1500, {.forwards = false, .maxSpeed = 75}, false);
+    chassis.turnToPoint(26, -26, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    intake.move_voltage(12000);
+    chassis.moveToPoint(30, -26, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    descoreState();
+    chassis.turnToPoint(46, 16, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(46, 16, 2000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(38, 3, 1000, {.forwards = false, .maxSpeed = 60}, false);
+    chassis.moveToPoint(46, 16, 1000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(38, 3, 1000, {.forwards = false, .maxSpeed = 60}, false);
+    chassis.moveToPoint(46, 16, 1000, {.forwards = true, .maxSpeed = 60}, false);
+    pros::delay(1000);
+    intake.brake();
+    descoreState();
+    /*stay in corner*/
+    //chassis.turnToPoint(16, -6, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    //chassis.moveToPoint(16, -6, 1000, {.forwards = true, .maxSpeed = 60}, false);
+    /*touch bar
+    chassis.moveToPoint(-18, -36, 2000, {.forwards = false, .maxSpeed = 127}, false);
+    nextState();*/
+    chassis.turnToPoint(-18, -36, 1000, {.forwards = true, .maxSpeed = 127}, false);
 }
 
 void Skills() {
@@ -679,7 +738,7 @@ void Skills() {
     chassis.moveToPoint(-48, 84, 1000, {.forwards = true, .maxSpeed = 127}, false);
     target = 3200;
     // move to intake red ring near wall stake
-    chassis.moveToPoint(-38, 63, 1000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-38, 62, 1000, {.forwards = false, .maxSpeed = 127}, false);
     pros::Task task3{[=] {
         pros::delay(500);
         intake.move_voltage(-12000);
@@ -687,9 +746,9 @@ void Skills() {
         intakeState();       
         }
     };
-    chassis.turnToPoint(-60, 63, 750, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-60, 62, 750, {.forwards = true, .maxSpeed = 127}, false);
     intake.move_voltage(12000);
-    chassis.moveToPoint(-60, 63, 1000, {.forwards = true, .maxSpeed = 60}, false);
+    chassis.moveToPoint(-60, 62, 1000, {.forwards = true, .maxSpeed = 60}, false);
     descoreState();
     pros::delay(500);
     descoreState();
@@ -981,9 +1040,9 @@ void autonomous() {
     pros::Task run{[&]{
         while (true) {
 
-            redColorSort();
+            //redColorSort();
 
-            //blueColorSort();
+            blueColorSort();
             
             //unjam();
 
@@ -991,7 +1050,7 @@ void autonomous() {
         }
     }
     };
-    Test();
+    BlueLeftSimple();
 }
 
 /**
