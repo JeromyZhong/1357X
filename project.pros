@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "BlueLeftSimple",
+    "project_name": "leftAuto",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -298,8 +298,8 @@
       }
     },
     "upload_options": {
-      "description": "blue left side simple",
-      "slot": 4
+      "description": "left side auto",
+      "slot": 7
     },
     "use_early_access": false
   }
