@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "ArcadeSkills",
+    "project_name": "skills",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -298,8 +298,9 @@
       }
     },
     "upload_options": {
-      "description": "arcade skills",
-      "slot": 6
+      "description": "skills",
+      "slot": 4,
+      "icon": "pros"
     },
     "use_early_access": false
   }
