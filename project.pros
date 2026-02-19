@@ -2,6 +2,7 @@
   "py/object": "pros.conductor.project.Project",
   "py/state": {
     "project_name": "Skills",
+    "project_name": "leftAuto",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -301,6 +302,8 @@
       "description": "skills",
       "slot": 4,
       "icon": "pros"
+      "description": "left side auto",
+      "slot": 7
     },
     "use_early_access": false
   }
