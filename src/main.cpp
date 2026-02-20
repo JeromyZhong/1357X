@@ -303,6 +303,7 @@ void PidTuning() {
 
 void leftAuto() {
     chassis.setPose(0, 0, 0);
+    wing.set_value(true);
     longGoal.set_value(true);
     chassis.moveToPoint(0, 30, 1000,{.forwards = true, .maxSpeed = 127}, false);
     matchloader.set_value(true);
@@ -335,13 +336,11 @@ void leftAuto() {
     chassis.turnToPoint(40, 23, 1000, {.forwards = true, .maxSpeed = 127}, false);
     chassis.moveToPoint(40, 23, 1000, {.forwards = true, .maxSpeed = 127}, false);
     chassis.turnToPoint(66, 0, 1000, {.forwards = true, .maxSpeed = 127}, false);
-
-
 }
-
 
 void rightAuto() {
     chassis.setPose(0, 0, 0);
+    wing.set_value(true);
     longGoal.set_value(true);
     chassis.moveToPoint(0, 30, 1000,{.forwards = true, .maxSpeed = 127}, false);
     matchloader.set_value(true);
@@ -375,6 +374,7 @@ void rightAuto() {
 
 void soloWP() {
     chassis.setPose(0, 0, 0);
+    wing.set_value(true);
     longGoal.set_value(true);
     chassis.moveToPoint(0, 28, 750,{.forwards = true, .maxSpeed = 127}, false);
     matchloader.set_value(true);
@@ -423,6 +423,68 @@ void soloWP() {
     chassis.moveToPoint(-18, -59, 1000, {.forwards = false, .maxSpeed = 90}, false);
     longGoal.set_value(false);
     intake.move_voltage(12000);
+}
+
+void sevenBallLeft() {
+    chassis.setPose(0, 0, 0);
+    wing.set_value(true);
+    longGoal.set_value(true);
+    intake.move_voltage(12000);
+    pros::Task task1{[=] {
+        pros::delay(400);
+        matchloader.set_value(true);  
+        }
+    };
+    chassis.moveToPoint(-8, 26, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-31, 0, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-31, 0, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-31, -24, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-31, -24, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    pros::delay(250);
+    intake.brake();
+    chassis.moveToPoint(-31, 25, 1000, {.forwards = false, .maxSpeed = 60}, false);
+    longGoal.set_value(false);
+    intake.move_voltage(12000);
+    pros::delay(3000);
+    intake.brake();
+    matchloader.set_value(false);
+    chassis.moveToPoint(-32, -2, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-44, 20, 1000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(-44, 20, 1000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(-42, 44, 1000, {.forwards = false, .maxSpeed = 127}, false);
+    wing.set_value(false);
+    chassis.moveToPoint(-42, 44, 2000, {.forwards = false, .maxSpeed = 127}, false);
+}
+
+void sevenBallRight() {
+    chassis.setPose(0, 0, 0);
+    wing.set_value(true);
+    longGoal.set_value(true);
+    intake.move_voltage(12000);
+    pros::Task task1{[=] {
+        pros::delay(400);
+        matchloader.set_value(true);  
+        }
+    };
+    chassis.moveToPoint(8, 26, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(32, 0, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(32, 0, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(32, -24, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.moveToPoint(32, -24, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    pros::delay(250);
+    intake.brake();
+    chassis.moveToPoint(32, 25, 1000, {.forwards = false, .maxSpeed = 60}, false);
+    longGoal.set_value(false);
+    intake.move_voltage(12000);
+    pros::delay(3000);
+    intake.brake();
+    matchloader.set_value(false);
+    chassis.moveToPoint(32, -2, 1000, {.forwards = true, .maxSpeed = 127}, false);
+    chassis.turnToPoint(21, 20, 1000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.moveToPoint(21, 20, 1000, {.forwards = false, .maxSpeed = 127}, false);
+    chassis.turnToPoint(21, 42, 1000, {.forwards = false, .maxSpeed = 127}, false);
+    wing.set_value(false);
+    chassis.moveToPoint(21, 42, 2000, {.forwards = false, .maxSpeed = 127}, false);
 }
 
 
@@ -562,7 +624,7 @@ void autonomous() {
         }
     }
     };*/
-    Skills();
+    sevenBallRight();
     longGoal.set_value(false);
     middleGoal.set_value(false);
 }
@@ -602,29 +664,26 @@ void opcontrol() {
     while (true) {
         //Tank drive
         // get left y and right y positions
-        /*int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
-
         // move the robot
-        chassis.tank(leftY, rightY);*/
-
+        chassis.tank(leftY, rightY);
 
         //Arcade drive
         // get left y and right x positions
         /*int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-
         // move the robot
         chassis.arcade(leftY, rightX);*/
    
         //while (intakeStop == false) {
             if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-            intake.move_voltage(-12000);
+            intake.move_voltage(12000);
             }
             else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            intake.move_voltage(12000);
+            intake.move_voltage(-12000);
             }
             else {
                 intake.move_voltage(0);
